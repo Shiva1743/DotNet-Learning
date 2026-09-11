@@ -1,0 +1,74 @@
+using CoreEmptyProject1.Models;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddMvc();
+//builder.Services.AddMvcCore();
+builder.Services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
+
+
+//builder.Services.AddControllers();
+//builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
+
+//Console.WriteLine("EnvironmentName");
+//Console.WriteLine(builder.Environment.EnvironmentName);
+//Console.WriteLine("ApplicationName");
+//Console.WriteLine(builder.Environment.ApplicationName);
+//Console.WriteLine("ContentRootPath");
+//Console.WriteLine(builder.Environment.ContentRootPath);
+
+
+//Console.WriteLine(builder.Configuration["MySettings:Company"]);
+//Console.WriteLine(builder.Configuration["MySettings:Version"]);
+//Console.WriteLine(builder.Configuration["MyKey"]);
+
+//app.MapGet("/", () => "Hello World123!");
+//app.UseDefaultFiles();
+
+
+//DefaultFilesOptions defaultfilesOptions = new DefaultFilesOptions();
+//defaultfilesOptions.DefaultFileNames.Clear();
+//defaultfilesOptions.DefaultFileNames.Add("home.html");
+//app.UseDefaultFiles(defaultfilesOptions);
+
+
+//FileServerOptions fileServerOptions = new FileServerOptions();
+//fileServerOptions.DefaultFilesOptions.DefaultFileNames.Clear();
+//fileServerOptions.DefaultFilesOptions.DefaultFileNames.Add("home.html");
+//app.UseFileServer(fileServerOptions); // represents file as defined
+
+
+//app.UseStaticFiles();
+if (app.Environment.IsDevelopment())
+{
+    Console.WriteLine("hii ngjg");
+    app.UseDeveloperExceptionPage();
+}
+//else if (app.Environment.IsStaging() || app.Environment.IsProduction() || app.Environment.Equals("UAT")) {
+//    app.UseExceptionHandler("/Error");
+//}
+
+// it represents used in replace of UseDefaultFiles and UseStaticFiles and html files like index,default.
+//app.UseFileServer();
+//app.UseDefaultFiles();
+
+
+app.UseStaticFiles();
+app.UseRouting();
+
+//app.UseMvcWithDefaultRoute(); // old dotnet for homecontoller
+app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//app.Run(async (contex) =>
+//{
+//    //throw new Exception("error message display!!");
+//    //await contex.Response.WriteAsync("hi from run cmd");
+
+//    // comes from launchsetting or window's enviroment setting in contol panel if set,
+//    // if not set in both then by default its value is production
+//    await contex.Response.WriteAsync("hosting environment : " + app.Environment.EnvironmentName);
+//});
+//app.Use(async(contex,next) => { Console.WriteLine("hii"); await next();  });
+
+app.Run();
