@@ -12,6 +12,8 @@ namespace CoreEmptyProject1.Controllers
     //    }
     //}
 
+    //[Route("Home")]
+    [Route("[controller]/[action]")]
     public class HomeController : Controller // for core methods
     {
         private IEmployeeRepository _employeeRepository;
@@ -19,19 +21,28 @@ namespace CoreEmptyProject1.Controllers
         {
             _employeeRepository = employeeRepository;
         }
-        public ViewResult Index()
+        [Route("")]
+        //[Route("home")]
+        //[Route("home/index")]
+        [Route("Index")]
+        [Route("~/")]
+        public ViewResult Index() // function name is not Index here so view should have the related cshtml file.
         {
             var model = _employeeRepository.GetAllEmployee();
-            return View(model);
+            return View("~/Views/Home/Index.cshtml",model);
+            //return View(model);
+
             //return Json(new { id = 1, name = "shiv" });
             //Employee model = _employeeRepository.GetEmployee(1);
-            //ViewData["Emp"] = model;s
+            //ViewData["Emp"] = model;
             //ViewData["PageTitle"] = "Employee Details";
 
             //return View(ViewData);
         }
 
         //[Route("Home/Details/{id?}")]
+        //[Route("Details/{id?}")]
+        [Route("{id?}")]
         public ViewResult Details(int? id)
         {
 
@@ -63,7 +74,7 @@ namespace CoreEmptyProject1.Controllers
         //        //return View("../../MyViews/Test");
         //        //return View("../Test/update");
         //        return View("Test");
-        //    //return new ObjectResult(model);   
+        //    //return new ObjectResult(model);
         //}
 
     }

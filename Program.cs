@@ -59,8 +59,8 @@ app.UseRouting();
 
 //app.UseMvcWithDefaultRoute(); // old dotnet for homecontoller
 //Conventional Routing
-app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
-
+//app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllers();
 //app.Run(async (contex) =>
 //{
 //    //throw new Exception("error message display!!");
