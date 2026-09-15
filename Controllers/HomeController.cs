@@ -1,4 +1,5 @@
 ﻿using CoreEmptyProject1.Models;
+using CoreEmptyProject1.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreEmptyProject1.Controllers
@@ -18,22 +19,52 @@ namespace CoreEmptyProject1.Controllers
         {
             _employeeRepository = employeeRepository;
         }
-        public string Index()
+        public ViewResult Index()
         {
-             return _employeeRepository.GetEmployee(1).Name;
+            var model = _employeeRepository.GetAllEmployee();
+            return View(model);
             //return Json(new { id = 1, name = "shiv" });
+            //Employee model = _employeeRepository.GetEmployee(1);
+            //ViewData["Emp"] = model;s
+            //ViewData["PageTitle"] = "Employee Details";
+
+            //return View(ViewData);
         }
 
-        public ViewResult Details()
+        //[Route("Home/Details/{id?}")]
+        public ViewResult Details(int? id)
         {
-            Employee model = _employeeRepository.GetEmployee(1);
+
+            HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
+            {
+                Empp = _employeeRepository.GetEmployee(id??3),
+                PageTitle = "Employee Details",
+            };
+            return View(homeDetailsViewModel);
+
+            //Employee model = _employeeRepository.GetEmployee(id??3);
+            //ViewBag.PageTitle = "Employee Details";
             //return View(model);
 
-            //return View("../../MyViews/Test");
-            //return View("../Test/update");
-            return View("Test");
-            //return new ObjectResult(model);   
+            //// For ViewBag = loosly typed data display in view page,doesnt shows complile time error,shows run time error only
+            //ViewBag.PageTitle = "Employee Details";
+            //ViewBag.Emp = model;
+            //return View(ViewBag);
+
+            ////For ViewData = loosly typed data display in view page
+            //ViewData["PageTitle"] = "Employee Details";
+            //ViewData["Emp"] = model;
+            //return View(ViewData);
         }
+
+        //{
+        //        Employee model = _employeeRepository.GetEmployee(1);
+        //        //return View(model);
+        //        //return View("../../MyViews/Test");
+        //        //return View("../Test/update");
+        //        return View("Test");
+        //    //return new ObjectResult(model);   
+        //}
 
     }
 }

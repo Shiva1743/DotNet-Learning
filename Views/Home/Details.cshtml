@@ -1,9 +1,44 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-    <h1>hello from details view</h1>
-</body>
-</html>
+﻿@* @model CoreEmptyProject1.Models.Employee *@
+@* for strongly typed view jethi @model. ma employee ni badhi property joi sakay *@
+
+
+@model HomeDetailsViewModel
+
+@{
+    Layout = null;
+    // Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title= "Employee List";
+}
+
+@* <h1>@ViewData["PageTitle"] folder</h1> *@
+@* <h1>@ViewBag.PageTitle folder</h1> *@
+<h1>@Model.PageTitle folder</h1>
+<div>Name:  @Model.Empp.Name </div>
+<div>Email:  @Model.Empp.Email </div>
+<div>Department:  @Model.Empp.Department </div>
+
+@section Scripts {
+<script src = "~/js/customescript.js" ></script>
+}
+
+
+
+@{
+    // var employees = ViewData["Emp"] as CoreEmptyProject1.Models.Employee;
+    // var employees = ViewBag.Emp;
+}
+    
+@* <div>Name1:  @Model.Name </div>
+<div>Email2:  @Model.Email </div>
+<div>Department:  @Model.Department </div> *@
+
+@* <div>Name1:  @employees?.Name </div>
+<div>Email1:  @employees?.Email </div>
+<div>Department:  @employees?.Department </div> *@
+
+@* for ViewData *@
+@* <div>Name:  @employees?.Name </div>
+<div>Email:  @employees?.Email </div>
+<div>Department:  @employees?.Department </div> *@
+
+

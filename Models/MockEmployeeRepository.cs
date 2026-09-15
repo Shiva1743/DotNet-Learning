@@ -1,4 +1,5 @@
-﻿namespace CoreEmptyProject1.Models
+﻿
+namespace CoreEmptyProject1.Models
 {
     public class MockEmployeeRepository : IEmployeeRepository
     {
@@ -14,11 +15,17 @@
             };
         }
 
+        public IEnumerable<Employee> GetAllEmployee()
+        {
+            //throw new NotImplementedException();
+            return _employeeList;
+        }
 
         public Employee GetEmployee(int Id)
         {
             //throw new NotImplementedException();
             return _employeeList.FirstOrDefault(e => e.Id == Id);
         }
+
     }
 }

@@ -58,6 +58,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 //app.UseMvcWithDefaultRoute(); // old dotnet for homecontoller
+//Conventional Routing
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
 //app.Run(async (contex) =>
