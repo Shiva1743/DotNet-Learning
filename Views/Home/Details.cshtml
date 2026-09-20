@@ -5,17 +5,30 @@
 @model HomeDetailsViewModel
 
 @{
-    Layout = null;
+    // Layout = null;
     // Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title= "Employee List";
 }
 
 @* <h1>@ViewData["PageTitle"] folder</h1> *@
 @* <h1>@ViewBag.PageTitle folder</h1> *@
-<h1>@Model.PageTitle folder</h1>
-<div>Name:  @Model.Empp.Name </div>
-<div>Email:  @Model.Empp.Email </div>
-<div>Department:  @Model.Empp.Department </div>
+<div class="card border-info m-3">
+    <div><b>@Model.PageTitle folder</b></div>
+    <div class="card-body">
+        @* asp-append-version IMAGE TAG HELPER *@
+        <img src="~/images/logo_1664259351.png" asp-append-version="true" alt="Alternate Text"  class="card-img-top w-50 h-50" />
+        <h4>Name:  @Model.Empp.Name </h4>
+        <h4>Email:  @Model.Empp.Email </h4>
+        <h4>Department:  @Model.Empp.Department </h4>
+
+    </div>
+    <div class="card-footer">
+        @* <a asp-controller></a> *@
+    <a href="#" class="btn btn-primary"> Edit</a>
+    <a asp-controller="home" asp-action="index" class="m-1 btn btn-secondary">BACK</a>
+    <a href="#" class="btn btn-danger"> delete</a>
+</div>
+</div>
 
 @section Scripts {
 <script src = "~/js/customescript.js" ></script>

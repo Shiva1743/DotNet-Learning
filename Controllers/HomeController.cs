@@ -21,10 +21,10 @@ namespace CoreEmptyProject1.Controllers
         {
             _employeeRepository = employeeRepository;
         }
-        [Route("")]
+        //[Route("")]
         //[Route("home")]
         //[Route("home/index")]
-        [Route("Index")]
+        //[Route("Index")]
         [Route("~/")]
         public ViewResult Index() // function name is not Index here so view should have the related cshtml file.
         {
@@ -76,6 +76,22 @@ namespace CoreEmptyProject1.Controllers
         //        return View("Test");
         //    //return new ObjectResult(model);
         //}
+
+        [HttpGet]
+        public ViewResult Create()
+        {
+            Console.WriteLine("hi  from create");
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(Employee employee)
+        {
+            if (ModelState.IsValid){
+                Employee newEmp = _employeeRepository.AddEmp(employee);
+                //return RedirectToAction("details",new {id= newEmp.Id});
+            }
+            return View();
+        }
 
     }
 }

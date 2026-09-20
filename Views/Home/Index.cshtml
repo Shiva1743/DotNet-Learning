@@ -2,25 +2,46 @@
 @{
     ViewBag.Title = "Employee List";
 }
-    <h1>hello from index view from home folder</h1>
-    <div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Department</th>
+<div class="text-center py-4"> <b>Employee List from folder view/home/index</b></div>
+<div class="card">
+    <div class="card-body d-flex justify-content-center">
+         <table class="table-bordered border-light text-center">
+        <thead>
+            <tr>
+                <th class="p-2">Name</th>
+                <th class="p-2">Email</th>
+                <th class="p-2">Department</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model)
+            {
+            <tr class="py-2">
+                <td class="p-2">@employee.Name</td>
+                <td class="p-2">@employee.Email</td>
+                <td class="p-2">@employee.Department</td>
+                <td>
+                    
+
+                    @* using url action *@
+                    @* <a href="@Url.Action("details", "home", new { id = employee.Id })" class="btn btn-success">show(using URL Action)</a> *@
+
+                    @* using html action *@
+                    @* @Html.ActionLink("View(using html action)","details","home",new {id=employee.Id}) *@
+
+                    @* using manually define path *@
+                    @* <a href="/home/details/@employee.Id" class="m-1 btn btn-primary">view(using normal path)</a> *@
+
+                    @* IMPORTANT mostly used using asp *@
+                    <a asp-controller="home" asp-action="details" asp-route-id="@employee.Id" class="btn btn-success">view(using asp)</a>
+                   
+                    @* <a href="/home/details/@employee.Id" class="m-1 btn btn-primary">edit</a>
+                    <a href="/home/details/@employee.Id" class="m-1 btn btn-danger">delete</a> *@
+                </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var employee in Model)
-                {
-                    <tr>
-                        <td>@employee.Name</td>
-                        <td>@employee.Email</td>
-                        <td>@employee.Department</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+            }
+        </tbody>
+    </table>
     </div>
+</div>

@@ -1,0 +1,64 @@
+﻿@model Employee
+@inject IEmployeeRepository _employeeRepository
+
+@{
+    ViewBag.Title = "Create Employee";
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Create Employee</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-controller="home" asp-action="create" method="post">
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">
+                                Name
+                            </label>
+                            <input asp-for="Name"
+                                   class="form-control"
+                                   placeholder="Enter your name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">
+                                Email
+                            </label>
+                            <input asp-for="Email"
+                                   class="form-control"
+                                   placeholder="Enter your email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <!-- Department -->
+                        <div class="mb-3">
+                            <label asp-for="Department" class="form-label">
+                                Department
+                            </label>
+                            <select asp-for="Department"
+                                    asp-items="Html.GetEnumSelectList<Dept>()"
+                                    class="form-select">
+                                <option value="">-- Select Department --</option>
+                            </select>
+                            <span asp-validation-for="Department" class="text-danger"></span>
+                        </div>
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <!-- Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                Create Employee
+                            </button>
+                        </div>
+                        <div class="d-grid">
+                            Total Employees = @_employeeRepository.GetAllEmployee().Count()
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

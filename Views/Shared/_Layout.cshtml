@@ -4,14 +4,60 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+    @* <environment include="Staging,Production"> *@
+    <environment include="Development">
+        <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet"
+              asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only"
+              asp-fallback-test-value="absolute"
+              asp-fallback-test-property="position"
+              asp-suppress-fallback-integrity="true"     
+        />
+        <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    </environment>
+    @* <environment exclude="Development">
+        <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    </environment> *@
+    <link href="~/css/sitebase.css" rel="stylesheet" />
 </head>
 <body>
     <div class="container">
+        <nav class="navbar navbar-expand-sm bg-info-subtle text-bg-dark">
+            <a class="navbar-brand">
+                <img asp-controller="home" asp-action="index" src="~/images/tortoise.png" height="50" width="50" />
+            </a>
+            @* <button type="button" data-toggle="collapse" data-target="#collapsebleNavbar" class="navbar-toggler">
+                <span class="navbar-toggler-icon"></span>
+            </button> *@
+            <button type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapsebleNavbar"
+                    class="navbar-toggler"
+                    aria-controls="collapsebleNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse " id="collapsebleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a asp-controller="Home" asp-action="Index" class="nav-link">List1</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Home" asp-action="Create" class="nav-link">Create</a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
         @RenderBody()
+
+        @if (IsSectionDefined("Scripts")){
+            @RenderSection("Scripts", required: true)
+        }
     </div>
-    @if (IsSectionDefined("Scripts")){
-        @RenderSection("Scripts", required: true)
-    }
     @* <script src="~/js/customescript.js"></script> *@
 </body>
 </html>
