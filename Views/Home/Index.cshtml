@@ -8,6 +8,7 @@
          <table class="table-bordered border-light text-center">
         <thead>
             <tr>
+                <th class="p-2">Profile</th>
                 <th class="p-2">Name</th>
                 <th class="p-2">Email</th>
                 <th class="p-2">Department</th>
@@ -17,7 +18,11 @@
         <tbody>
             @foreach (var employee in Model)
             {
+                var imagepath = "~/images/" + (@employee.Photopath ?? "logo_1664259351.png");
             <tr class="py-2">
+                <td class="p-2">
+                    <img src="@imagepath" asp-append-version="true" alt="Alternate Text" class="card-img-top w-25 h-25" />
+                </td>
                 <td class="p-2">@employee.Name</td>
                 <td class="p-2">@employee.Email</td>
                 <td class="p-2">@employee.Department</td>

@@ -5,11 +5,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc();
 //builder.Services.AddMvcCore();
 
+//builder.Logging.ClearProviders();
+//builder.Logging.AddConsole();
+//builder.Logging.AddDebug();
+
+
+// ASP.NET Core in DI container , AppDbContext register and connect with SQL Server.
 builder.Services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("EmployeeDBConnection")));
-builder.Services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>(); // same count value through application
+
+
+//builder.Services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>(); // same count value through application
 //builder.Services.AddScoped<IEmployeeRepository, MockEmployeeRepository>(); // count will be same withing scoped means incresed till 5
 //builder.Services.AddTransient<IEmployeeRepository, MockEmployeeRepository>(); // count will be same as default data bcz every time new intance is created
 
+builder.Services.AddScoped<IEmployeeRepository, SQLEmployeeRepository>(); // count will be same withing scoped means incresed till 5
 
 //builder.Services.AddControllers();
 //builder.Services.AddControllersWithViews();

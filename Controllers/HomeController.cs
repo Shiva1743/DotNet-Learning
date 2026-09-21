@@ -4,22 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoreEmptyProject1.Controllers
 {
-    //public class HomeController
-    //{
-    //    public string Index()
-    //    {
-    //        return "hello hi from mvc";
-    //    }
-    //}
-
     //[Route("Home")]
     [Route("[controller]/[action]")]
     public class HomeController : Controller // for core methods
     {
         private IEmployeeRepository _employeeRepository;
-        public HomeController(IEmployeeRepository employeeRepository)// constructor injection
-        {
+        private readonly ILogger<HomeController> _logger;
+        private readonly IWebHostEnvironment _hostingEnvironment;
+
+        // constructor injection
+        public HomeController(IEmployeeRepository employeeRepository,
+            IWebHostEnvironment hostingEnvironment,ILogger<HomeController> logger)
+        {   
             _employeeRepository = employeeRepository;
+            _hostingEnvironment = hostingEnvironment;
+            _logger = logger;
         }
         //[Route("")]
         //[Route("home")]
@@ -29,7 +28,7 @@ namespace CoreEmptyProject1.Controllers
         public ViewResult Index() // function name is not Index here so view should have the related cshtml file.
         {
             var model = _employeeRepository.GetAllEmployee();
-            return View("~/Views/Home/Index.cshtml",model);
+            return View("~/Views/Home/Index.cshtml", model);
             //return View(model);
 
             //return Json(new { id = 1, name = "shiv" });
@@ -48,7 +47,7 @@ namespace CoreEmptyProject1.Controllers
 
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                Empp = _employeeRepository.GetEmployee(id??3),
+                Empp = _employeeRepository.GetEmployee(id ?? 3),
                 PageTitle = "Employee Details",
             };
             return View(homeDetailsViewModel);
@@ -84,14 +83,30 @@ namespace CoreEmptyProject1.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(EmployeeCreateViewModel model)
         {
-            if (ModelState.IsValid){
-                Employee newEmp = _employeeRepository.AddEmp(employee);
-                //return RedirectToAction("details",new {id= newEmp.Id});
+            if (ModelState.IsValid)
+            {
+                string uniqueFileName = null;
+                if (model.Photo != null)
+                {
+                    string uploadPathFolder = Path.Combine(_hostingEnvironment.WebRootPath,"images");
+                    uniqueFileName = Guid.NewGuid().ToString()+'_'+model.Photo.FileName;
+                    string filePath = Path.Combine(uploadPathFolder, uniqueFileName);
+                    _logger.LogInformation("File path = {Path}", filePath);
+                    model.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                }
+                Employee newEmp = new Employee
+                {
+                    Name = model.Name,
+                    Email = model.Email,
+                    Department = model.Department,
+                    Photopath = uniqueFileName,
+                };
+                _employeeRepository.AddEmp(newEmp);
+                return RedirectToAction("details",new {id= newEmp.Id});
             }
             return View();
         }
-
     }
 }

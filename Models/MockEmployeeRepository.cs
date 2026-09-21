@@ -1,8 +1,10 @@
 ﻿
 namespace CoreEmptyProject1.Models
 {
+     //In Memory Storing Repository
     public class MockEmployeeRepository : IEmployeeRepository
     {
+
         private List<Employee> _employeeList;
 
         public MockEmployeeRepository()
@@ -21,10 +23,10 @@ namespace CoreEmptyProject1.Models
             return _employeeList;
         }
 
-        public Employee GetEmployee(int Id)
+        public Employee GetEmployee(int id)
         {
             //throw new NotImplementedException();
-            return _employeeList.FirstOrDefault(e => e.Id == Id);
+            return _employeeList.FirstOrDefault(e => e.Id == id);
         }
         public Employee AddEmp(Employee employee)
         {
@@ -34,5 +36,25 @@ namespace CoreEmptyProject1.Models
             //throw new NotImplementedException();
         }
 
+        public Employee? Delete(int id)
+        {
+            Employee employee = _employeeList.FirstOrDefault(e => e.Id == id);
+            if (employee != null) {
+                _employeeList.Remove(employee);
+            }
+            return employee;
+        }
+
+        public Employee? UpdateEmp(Employee employeeChanges)
+        {
+            Employee? empData = _employeeList.FirstOrDefault(e => e.Id == employeeChanges.Id);
+            if (empData != null)
+            {
+                empData.Name = employeeChanges.Name;
+                empData.Email = employeeChanges.Email;
+                empData.Department = employeeChanges.Department;
+            }
+            return empData;
+        }
     }
 }

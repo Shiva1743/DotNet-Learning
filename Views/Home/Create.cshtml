@@ -1,4 +1,5 @@
-﻿@model Employee
+﻿@* @model Employee *@
+@model EmployeeCreateViewModel
 @inject IEmployeeRepository _employeeRepository
 
 @{
@@ -12,7 +13,7 @@
                     <h3 class="mb-0">Create Employee</h3>
                 </div>
                 <div class="card-body p-4">
-                    <form asp-controller="home" asp-action="create" method="post">
+                    <form enctype="multipart/form-data" asp-controller="home" asp-action="create" method="post">
                         <!-- Name -->
                         <div class="mb-3">
                             <label asp-for="Name" class="form-label">
@@ -46,19 +47,39 @@
                             <span asp-validation-for="Department" class="text-danger"></span>
                         </div>
                         <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <!-- Photo -->
+                        <div class="mb-3">
+                            <label asp-for="Photo" class="form-label"></label>
+                            <div class="custom-file">
+                                <input asp-for="Photo" class="form-control custom-file-input" />
+                                <label class="custom-file-label" >Choose File12...</label>
+                            </div>
+                        </div>
                         <!-- Button -->
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">
                                 Create Employee
                             </button>
                         </div>
-                        <div class="d-grid">
+                        @* <div class="d-grid">
                             Total Employees = @_employeeRepository.GetAllEmployee().Count()
-                        </div>
+                        </div> *@
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@section Scripts{
+    <script>
+        $(document).ready(function(){
+            $('.custom-file-input').on("change",function(){
+                var filename = $(this).val().split('\\').pop();
+                alert(filename);
+                $(this).next('.custom-file-label').html(filename);
+            });
+        });
+    </script>
+}
 
