@@ -45,10 +45,17 @@ namespace CoreEmptyProject1.Controllers
         [Route("{id?}")]
         public ViewResult Details(int? id)
         {
+            //throw new Exception("hello show exceptioon error message here!!");
+            Employee EmppData = _employeeRepository.GetEmployee(id.Value);
+            if (EmppData == null)
+            {
+                Response.StatusCode = 404;
+                return View("NotFound",id.Value);
+            }
 
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                Empp = _employeeRepository.GetEmployee(id ?? 3),
+                Empp = _employeeRepository.GetEmployee(id??3),
                 PageTitle = "Employee Details",
             };
             return View(homeDetailsViewModel);
