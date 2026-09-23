@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CoreEmptyProject1.Models;
+using System.ComponentModel.DataAnnotations;
 
-namespace CoreEmptyProject1.Models
+namespace CoreEmptyProject1.ViewModels
 {
     public class EmployeeCreateViewModel
     {
@@ -14,5 +15,6 @@ namespace CoreEmptyProject1.Models
         [Required]
         public Dept? Department { get; set; }
         public IFormFile Photo { get; set; }
+        //public List<IFormFile> Photos { get; set; }
     }
 }

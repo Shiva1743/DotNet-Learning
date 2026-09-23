@@ -1,6 +1,7 @@
 ﻿using CoreEmptyProject1.Models;
 using CoreEmptyProject1.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace CoreEmptyProject1.Controllers
 {
@@ -14,8 +15,8 @@ namespace CoreEmptyProject1.Controllers
 
         // constructor injection
         public HomeController(IEmployeeRepository employeeRepository,
-            IWebHostEnvironment hostingEnvironment,ILogger<HomeController> logger)
-        {   
+            IWebHostEnvironment hostingEnvironment, ILogger<HomeController> logger)
+        {
             _employeeRepository = employeeRepository;
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
@@ -77,25 +78,102 @@ namespace CoreEmptyProject1.Controllers
         //}
 
         [HttpGet]
+        [Route("{id?}")]
+        public ViewResult Edit(int id)
+        {
+            _logger.LogInformation("========== EDIT ACTION CALLED ==========");
+
+            Employee Empp = _employeeRepository.GetEmployee(id);
+            EmployeeEditViewModel editDetailsViewModel = new EmployeeEditViewModel()
+            {
+                Name = Empp.Name,
+                Email = Empp.Email,
+                Department = Empp.Department,
+                ExistingPhotoPath = Empp.Photopath,
+            };
+            return View(editDetailsViewModel);
+        }
+
+        [HttpPost]
+        [Route("{id}")]
+        public IActionResult edit(EmployeeEditViewModel model, int id)
+        {
+            //try
+            //{
+            //    _logger.LogInformation("Edit started. Id = {Id}", model.Id);
+
+            //    _logger.LogInformation(
+            //        "Model: Name={Name}, Email={Email}, Photo={Photo}",
+            //        model.Name,
+            //        model.Email,
+            //        model.Photo?.FileName);
+
+            if (ModelState.IsValid)
+            {
+                Employee Empp = _employeeRepository.GetEmployee(id);
+                //Empp.Id = model.Id;
+                Empp.Name = model.Name;
+                Empp.Email = model.Email;
+                Empp.Department = model.Department;
+
+                if (model.Photo != null)
+                {
+                    if (model.ExistingPhotoPath != null)
+                    {
+                        string filepath = Path.Combine(_hostingEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
+                        System.IO.File.Delete(filepath);
+                    }
+                    Empp.Photopath = ProcessFileUploads(model);
+                }
+                _employeeRepository.UpdateEmp(Empp);
+                return RedirectToAction("index");
+            }
+            return View(model);
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError(ex, "Error while updating employee.");
+
+            //    throw;
+            //}
+        }
+
+        private string ProcessFileUploads(EmployeeCreateViewModel model)
+        {
+            string uniqueFileName = null;
+            if (model.Photo != null)
+            {
+                //foreach (IFormFile photo in model.Photos)
+                //{
+                string uploadPathFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + '_' + model.Photo.FileName;
+                string filePath = Path.Combine(uploadPathFolder, uniqueFileName);
+                _logger.LogInformation("File path = {Path}", filePath);
+                using (var file = new FileStream(filePath, FileMode.Create))
+                {
+                    model.Photo.CopyTo(file);
+                }
+
+                //}
+            }
+
+            return uniqueFileName;
+        }
+
+        [HttpGet]
         public ViewResult Create()
         {
             Console.WriteLine("hi  from create");
             return View();
         }
+
         [HttpPost]
         public IActionResult Create(EmployeeCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                string uniqueFileName = null;
-                if (model.Photo != null)
-                {
-                    string uploadPathFolder = Path.Combine(_hostingEnvironment.WebRootPath,"images");
-                    uniqueFileName = Guid.NewGuid().ToString()+'_'+model.Photo.FileName;
-                    string filePath = Path.Combine(uploadPathFolder, uniqueFileName);
-                    _logger.LogInformation("File path = {Path}", filePath);
-                    model.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
-                }
+                string uniqueFileName = ProcessFileUploads(model);
                 Employee newEmp = new Employee
                 {
                     Name = model.Name,
@@ -104,7 +182,7 @@ namespace CoreEmptyProject1.Controllers
                     Photopath = uniqueFileName,
                 };
                 _employeeRepository.AddEmp(newEmp);
-                return RedirectToAction("details",new {id= newEmp.Id});
+                return RedirectToAction("details", new { id = newEmp.Id });
             }
             return View();
         }

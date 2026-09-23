@@ -39,7 +39,9 @@
                     @* <a href="/home/details/@employee.Id" class="m-1 btn btn-primary">view(using normal path)</a> *@
 
                     @* IMPORTANT mostly used using asp *@
-                    <a asp-controller="home" asp-action="details" asp-route-id="@employee.Id" class="btn btn-success">view(using asp)</a>
+                    <a asp-controller="home" asp-action="details" asp-route-id="@employee.Id" class="btn btn-primary">view(usingASP)</a>
+                    <a asp-controller="home" asp-action="edit" asp-route-id="@employee.Id" class="btn btn-success">Edit</a>
+                    <a asp-controller="home" asp-action="edit" asp-route-id="@employee.Id" class="btn btn-danger">Delete</a>
                    
                     @* <a href="/home/details/@employee.Id" class="m-1 btn btn-primary">edit</a>
                     <a href="/home/details/@employee.Id" class="m-1 btn btn-danger">delete</a> *@

@@ -7,7 +7,7 @@
 @{
     // Layout = null;
     // Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title= "Employee List";
+    ViewBag.Title = "Employee List";
     var imagepath = "~/images/" + (Model.Empp.Photopath ?? "logo_1664259351.png");
 }
 
@@ -25,14 +25,15 @@
     </div>
     <div class="card-footer">
         @* <a asp-controller></a> *@
-    <a href="#" class="btn btn-primary"> Edit</a>
-    <a asp-controller="home" asp-action="index" class="m-1 btn btn-secondary">BACK</a>
-    <a href="#" class="btn btn-danger"> delete</a>
-</div>
+        <a asp-controller="home" asp-action="index" class="m-1 btn btn-secondary">BACK</a>
+        <a asp-controller="home" asp-action="edit" asp-route-id="@Model.Empp.Id" class="btn btn-success">Edit</a>
+
+        <a href="#" class="btn btn-danger"> delete</a>
+    </div>
 </div>
 
 @section Scripts {
-<script src = "~/js/customescript.js" ></script>
+    <script src="~/js/customescript.js"></script>
 }
 
 
@@ -41,7 +42,7 @@
     // var employees = ViewData["Emp"] as CoreEmptyProject1.Models.Employee;
     // var employees = ViewBag.Emp;
 }
-    
+
 @* <div>Name1:  @Model.Name </div>
 <div>Email2:  @Model.Email </div>
 <div>Department:  @Model.Department </div> *@

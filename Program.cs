@@ -5,8 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc();
 //builder.Services.AddMvcCore();
 
-//builder.Logging.ClearProviders();
-//builder.Logging.AddConsole();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 //builder.Logging.AddDebug();
 
 
@@ -58,6 +58,10 @@ if (app.Environment.IsDevelopment())
 {
     Console.WriteLine("hii ngjg");
     app.UseDeveloperExceptionPage();
+}else{
+    //app.UseStatusCodePages(); // 404 page not found ape
+    //app.UseStatusCodePagesWithRedirects("/Error/{0}"); // 404 page open kare atle statuscode 200 ave but 404 actual error avvi joie
+    app.UseStatusCodePagesWithReExecute("/Error/{0}"); // 404 actual error ave chhe.
 }
 //else if (app.Environment.IsStaging() || app.Environment.IsProduction() || app.Environment.Equals("UAT")) {
 //    app.UseExceptionHandler("/Error");
