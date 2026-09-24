@@ -5,10 +5,12 @@ namespace CoreEmptyProject1.Models
     public class SQLEmployeeRepository : IEmployeeRepository
     {
         private readonly AppDbContext context;
+        private readonly ILogger<SQLEmployeeRepository> _logger;
 
-        public SQLEmployeeRepository(AppDbContext context)
+        public SQLEmployeeRepository(AppDbContext context,ILogger<SQLEmployeeRepository> logger)
         {
             this.context = context;
+            _logger = logger;
         }
         public Employee AddEmp(Employee employee)
         {
@@ -34,6 +36,13 @@ namespace CoreEmptyProject1.Models
 
         public Employee GetEmployee(int id)
         {
+            _logger.LogTrace("Trace Log");
+            _logger.LogDebug("Trace LogDebug");
+            _logger.LogInformation("Trace LogInformation");
+            _logger.LogWarning("Trace LogWarning");
+            _logger.LogError("Trace LogError");
+            _logger.LogCritical("Trace LogCritical");
+
             Employee employeeData = context.Employees.FirstOrDefault(e => e.Id == id);
             return employeeData;
         }

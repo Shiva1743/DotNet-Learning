@@ -1,8 +1,11 @@
 using CoreEmptyProject1.Models;
 using Microsoft.EntityFrameworkCore;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc();
+builder.Host.UseNLog();
+
 //builder.Services.AddMvcCore();
 
 //builder.Logging.ClearProviders();
@@ -57,8 +60,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     Console.WriteLine("hii ngjg");
-    app.UseDeveloperExceptionPage();
-}else{
+    //app.UseDeveloperExceptionPage(); // old code
+
+    app.UseExceptionHandler("/Error");
+}
+else{
 
     //app.UseStatusCodePages(); // 404 page not found ape
     //app.UseStatusCodePagesWithRedirects("/Error/{0}"); // 404 page open kare atle statuscode 200 ave but 404 actual error avvi joie

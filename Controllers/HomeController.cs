@@ -46,6 +46,12 @@ namespace CoreEmptyProject1.Controllers
         public ViewResult Details(int? id)
         {
             //throw new Exception("hello show exceptioon error message here!!");
+            _logger.LogTrace("Trace Log");
+            _logger.LogDebug("Trace LogDebug");
+            _logger.LogInformation("Trace LogInformation");
+            _logger.LogWarning("Trace LogWarning");
+            _logger.LogError("Trace LogError");
+            _logger.LogCritical("Trace LogCritical");
             Employee EmppData = _employeeRepository.GetEmployee(id.Value);
             if (EmppData == null)
             {
