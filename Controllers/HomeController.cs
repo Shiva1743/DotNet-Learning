@@ -1,5 +1,6 @@
 ﻿using CoreEmptyProject1.Models;
 using CoreEmptyProject1.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
 
@@ -7,6 +8,8 @@ namespace CoreEmptyProject1.Controllers
 {
     //[Route("Home")]
     [Route("[controller]/[action]")]
+    //[Authorize]
+
     public class HomeController : Controller // for core methods
     {
         private IEmployeeRepository _employeeRepository;
@@ -26,6 +29,7 @@ namespace CoreEmptyProject1.Controllers
         //[Route("home/index")]
         //[Route("Index")]
         [Route("~/")]
+        [AllowAnonymous]
         public ViewResult Index() // function name is not Index here so view should have the related cshtml file.
         {
             var model = _employeeRepository.GetAllEmployee();
@@ -43,6 +47,7 @@ namespace CoreEmptyProject1.Controllers
         //[Route("Home/Details/{id?}")]
         //[Route("Details/{id?}")]
         [Route("{id?}")]
+        [AllowAnonymous]
         public ViewResult Details(int? id)
         {
             //throw new Exception("hello show exceptioon error message here!!");
@@ -52,12 +57,12 @@ namespace CoreEmptyProject1.Controllers
             _logger.LogWarning("Trace LogWarning");
             _logger.LogError("Trace LogError");
             _logger.LogCritical("Trace LogCritical");
-            Employee EmppData = _employeeRepository.GetEmployee(id.Value);
-            if (EmppData == null)
-            {
-                Response.StatusCode = 404;
-                return View("NotFound",id.Value);
-            }
+            //Employee EmppData = _employeeRepository.GetEmployee(id.Value);
+            //if (EmppData == null)
+            //{
+            //    Response.StatusCode = 404;
+            //    return View("NotFound",id);
+            //}
 
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {

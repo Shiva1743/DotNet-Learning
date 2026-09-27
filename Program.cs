@@ -1,9 +1,18 @@
 using CoreEmptyProject1.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddMvc();
+builder.Services.AddMvc(config =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+    config.Filters.Add(new AuthorizeFilter(policy));
+});
 builder.Host.UseNLog();
 
 //builder.Services.AddMvcCore();
@@ -15,6 +24,20 @@ builder.Host.UseNLog();
 
 // ASP.NET Core in DI container , AppDbContext register and connect with SQL Server.
 builder.Services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("EmployeeDBConnection")));
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+    {
+        options.Password.RequiredLength = 10;
+        options.Password.RequiredUniqueChars = 3;
+        options.Password.RequireNonAlphanumeric = false;
+    })
+    .AddEntityFrameworkStores<AppDbContext>();
+
+//builder.Services.Configure<IdentityOptions>(options =>
+//{
+//    options.Password.RequiredLength = 10;
+//    options.Password.RequiredUniqueChars = 3;
+//    options.Password.RequireNonAlphanumeric = false;
+//});
 
 
 //builder.Services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>(); // same count value through application
@@ -28,17 +51,6 @@ builder.Services.AddScoped<IEmployeeRepository, SQLEmployeeRepository>(); // cou
 
 var app = builder.Build();
 
-//Console.WriteLine("EnvironmentName");
-//Console.WriteLine(builder.Environment.EnvironmentName);
-//Console.WriteLine("ApplicationName");
-//Console.WriteLine(builder.Environment.ApplicationName);
-//Console.WriteLine("ContentRootPath");
-//Console.WriteLine(builder.Environment.ContentRootPath);
-
-
-//Console.WriteLine(builder.Configuration["MySettings:Company"]);
-//Console.WriteLine(builder.Configuration["MySettings:Version"]);
-//Console.WriteLine(builder.Configuration["MyKey"]);
 
 //app.MapGet("/", () => "Hello World123!");
 //app.UseDefaultFiles();
@@ -84,6 +96,9 @@ app.UseStatusCodePagesWithReExecute("/Error/{0}"); // 404 actual error ave chhe.
 
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 //app.UseMvcWithDefaultRoute(); // old dotnet for homecontoller
 //Conventional Routing

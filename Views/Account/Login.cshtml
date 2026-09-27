@@ -1,0 +1,79 @@
+﻿@model LoginViewModel
+
+@{
+    ViewBag.Title = "User Login";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+
+            <div class="card shadow">
+                <div class="card-header text-center">
+                    <h3 class="mb-0">User Login</h3>
+                </div>
+
+                <div class="card-body">
+
+                    <form asp-controller="Account"
+                          asp-action="login"
+                          method="post">
+
+                        <div asp-validation-summary="All"
+                             class="text-danger mb-3">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email"
+                                   class="form-label">
+                                Email
+                            </label>
+
+                            <input asp-for="Email"
+                                   class="form-control"
+                                   placeholder="Enter your email" />
+
+                            <span asp-validation-for="Email"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label asp-for="Password"
+                                   class="form-label">
+                                Password
+                            </label>
+
+                            <input asp-for="Password"
+                                   class="form-control"
+                                   placeholder="Enter password" />
+
+                            <span asp-validation-for="Password"
+                                  class="text-danger">
+                            </span>
+                        </div>
+                        <!-- RememberMe -->
+                        <div class="mb-3">
+                            <div class="checkbox">
+                                <label asp-for="RememberMe"
+                                       class="form-label">
+                                    <input asp-for="RememberMe" />
+                                    @Html.DisplayNameFor(m => m.RememberMe)
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Login
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
