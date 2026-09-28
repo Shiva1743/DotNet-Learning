@@ -18,7 +18,7 @@
                     <form asp-controller="Account"
                           asp-action="login"
                           method="post">
-
+                        <input type="hidden" name="returnUrl" value="@(ViewBag.ReturnUrl ?? "")" />
                         <div asp-validation-summary="All"
                              class="text-danger mb-3">
                         </div>

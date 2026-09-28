@@ -19,15 +19,16 @@ namespace CoreEmptyProject1.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl)
         {
-             return View();
+            ViewBag.ReturnUrl = returnUrl ?? null;
+            return View();
         }
 
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginViewModel model,string returnUrl)
+        public async Task<IActionResult> Login(LoginViewModel model,string? returnUrl)
         {
             if (ModelState.IsValid)
             {
