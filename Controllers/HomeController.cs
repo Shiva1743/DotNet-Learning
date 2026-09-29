@@ -6,10 +6,8 @@ using Microsoft.Extensions.Hosting.Internal;
 
 namespace CoreEmptyProject1.Controllers
 {
-    //[Route("Home")]
     [Route("[controller]/[action]")]
     //[Authorize]
-
     public class HomeController : Controller // for core methods
     {
         private IEmployeeRepository _employeeRepository;
@@ -24,28 +22,15 @@ namespace CoreEmptyProject1.Controllers
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
         }
-        //[Route("")]
-        //[Route("home")]
-        //[Route("home/index")]
-        //[Route("Index")]
+
         [Route("~/")]
         [AllowAnonymous]
         public ViewResult Index() // function name is not Index here so view should have the related cshtml file.
         {
             var model = _employeeRepository.GetAllEmployee();
             return View("~/Views/Home/Index.cshtml", model);
-            //return View(model);
-
-            //return Json(new { id = 1, name = "shiv" });
-            //Employee model = _employeeRepository.GetEmployee(1);
-            //ViewData["Emp"] = model;
-            //ViewData["PageTitle"] = "Employee Details";
-
-            //return View(ViewData);
         }
 
-        //[Route("Home/Details/{id?}")]
-        //[Route("Details/{id?}")]
         [Route("{id?}")]
         [AllowAnonymous]
         public ViewResult Details(int? id)
@@ -70,30 +55,7 @@ namespace CoreEmptyProject1.Controllers
                 PageTitle = "Employee Details",
             };
             return View(homeDetailsViewModel);
-
-            //Employee model = _employeeRepository.GetEmployee(id??3);
-            //ViewBag.PageTitle = "Employee Details";
-            //return View(model);
-
-            //// For ViewBag = loosly typed data display in view page,doesnt shows complile time error,shows run time error only
-            //ViewBag.PageTitle = "Employee Details";
-            //ViewBag.Emp = model;
-            //return View(ViewBag);
-
-            ////For ViewData = loosly typed data display in view page
-            //ViewData["PageTitle"] = "Employee Details";
-            //ViewData["Emp"] = model;
-            //return View(ViewData);
         }
-
-        //{
-        //        Employee model = _employeeRepository.GetEmployee(1);
-        //        //return View(model);
-        //        //return View("../../MyViews/Test");
-        //        //return View("../Test/update");
-        //        return View("Test");
-        //    //return new ObjectResult(model);
-        //}
 
         [HttpGet]
         [Route("{id?}")]
@@ -116,15 +78,6 @@ namespace CoreEmptyProject1.Controllers
         [Route("{id}")]
         public IActionResult edit(EmployeeEditViewModel model, int id)
         {
-            //try
-            //{
-            //    _logger.LogInformation("Edit started. Id = {Id}", model.Id);
-
-            //    _logger.LogInformation(
-            //        "Model: Name={Name}, Email={Email}, Photo={Photo}",
-            //        model.Name,
-            //        model.Email,
-            //        model.Photo?.FileName);
 
             if (ModelState.IsValid)
             {
@@ -147,14 +100,6 @@ namespace CoreEmptyProject1.Controllers
                 return RedirectToAction("index");
             }
             return View(model);
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError(ex, "Error while updating employee.");
-
-            //    throw;
-            //}
         }
 
         private string ProcessFileUploads(EmployeeCreateViewModel model)
