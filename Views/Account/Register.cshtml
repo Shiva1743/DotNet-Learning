@@ -71,6 +71,22 @@
                             </span>
                         </div>
 
+                        <!-- City -->
+                        <div class="mb-3">
+                            <label asp-for="City"
+                                   class="form-label">
+                                City
+                            </label>
+
+                            <input asp-for="City"
+                                   class="form-control"
+                                   placeholder="Enter your city" />
+
+                            <span asp-validation-for="City"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
                         <button type="submit"
                                 class="btn btn-primary w-100">
                             Register

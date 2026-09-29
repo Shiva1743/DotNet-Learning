@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CoreEmptyProject1.Utilities;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreEmptyProject1.ViewModels
 {
@@ -6,7 +8,15 @@ namespace CoreEmptyProject1.ViewModels
     {
         [Required]
         [EmailAddress]
+        [ValidEmailDomain(allowedDomain: "test.com", ErrorMessage = "domain name must be test.com")]
+        [Remote(action: "IsEmailInUse", controller: "Account")]
         public string Email { get; set; }
+
+        [Required]
+        public string City { get; set; }
+
+
+
 
         [Required]
         [DataType(DataType.Password)]
