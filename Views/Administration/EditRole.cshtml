@@ -1,0 +1,90 @@
+﻿@model EditRoleViewModel
+
+@{
+    ViewBag.Title = "Edit User Role";
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <!-- Header -->
+                <div class="card-header text-center">
+                    <h3 class="mb-0">Edit User Role</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Validation -->
+                    <div asp-validation-summary="All"
+                         class="text-danger mb-3">
+                    </div>
+                    <!-- ========================= -->
+                    <!-- Update Role Name -->
+                    <!-- ========================= -->
+                    <form asp-controller="Administration"
+                          asp-action="EditRole"
+                          method="post">
+                        <!-- Role Id -->
+                        <div class="mb-3">
+                            <label asp-for="Id"
+                                   class="form-label">
+                                Role Id
+                            </label>
+                            <input asp-for="Id" disabled
+                                   class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="RoleName"
+                                   class="form-label">
+                                Role Name
+                            </label>
+                            <input asp-for="RoleName"
+                                   class="form-control" />
+                            <span asp-validation-for="RoleName"
+                                  class="text-danger">
+                            </span>
+                        </div>
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Update Role
+                        </button>
+                    </form>
+                    <hr class="my-4" />
+                    <!-- ========================= -->
+                    <!-- Users In This Role -->
+                    <!-- ========================= -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Users in this role
+                        </label>
+                        @if (Model.Users != null && Model.Users.Any())
+                        {
+                            <input type="text"
+                                   class="form-control"
+                                   value="@string.Join(", ", Model.Users)"
+                                   readonly />
+                        }
+                        else
+                        {
+                            <input type="text"
+                                   class="form-control"
+                                   value="No users in this role"
+                                   readonly />
+                        }
+                    </div>
+
+                    <!-- Manage Users Button -->
+                    <a asp-controller="Administration"
+                       asp-action="ManageUsersInRole"
+                       asp-route-roleId="@Model.Id"
+                       class="btn btn-secondary w-100">
+                        Manage Users
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

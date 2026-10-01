@@ -1,0 +1,39 @@
+﻿@model IEnumerable<IdentityRole>
+@{
+    ViewBag.Title = "Role List";
+}
+<div class="text-center py-4"> <b>Role List </b></div>
+<div class="card">
+    <a asp-controller="Administration" style="align-self: end;" asp-action="CreateRole" class="btn btn-primary m-3  w-25">Add Role</a>
+    <div class="card-body d-flex justify-content-center">
+                @if (Model != null && Model.Any())
+                {
+                    <table class="table-bordered border-light">
+                        <thead>
+                            <tr>
+                                <th class="p-2">Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var role in Model)
+                            {
+                   
+                                <tr class="py-2">
+                                    <td class="p-2">@role.Name</td>
+                                    <td>
+                                        <a asp-controller="Administration" asp-action="EditRole" asp-route-id="@role.Id" class="btn btn-primary">Edit</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="py-2">
+                            No Data Found
+                    </div>
+                }
+    </div>
+</div>

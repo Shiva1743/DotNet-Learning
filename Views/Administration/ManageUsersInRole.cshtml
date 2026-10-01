@@ -1,0 +1,47 @@
+﻿@model List<UserRoleViewModel>
+
+@{
+    var roleId = ViewBag.RoleId;
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <form method="post" asp-action="ManageUsersInRole" asp-route-roleId="@roleId" asp-controller="Administration">
+                <div class="card shadow">
+                    <!-- Header -->
+                    <div class="card-header text-center">
+                        <h3 class="mb-0">Update User Role</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Validation -->
+                        <div asp-validation-summary="All"
+                             class="text-danger mb-3">
+                        </div>
+                        @if (Model == null)
+                        {
+                            <div class="alert alert-danger">Model null chhe. Controller e model moklyo nathi.</div>
+                        }
+                        else
+                        {
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                <input type="hidden" asp-for="@Model[i].UserId" />
+                                <input type="hidden" asp-for="@Model[i].UserName" />
+                                <div class="form-check">
+                                    <input class="form-check-input" asp-for="@Model[i].IsSelected" />
+                                    <label asp-for="@Model[i].IsSelected">@Model[i].UserName</label>
+                                </div>
+                            }                            
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <input type="submit" value="Update" class="btn btn-primary"/>
+                        <a asp-action="EditRole" asp-route-id="@roleId" asp-controller="Administration" class="btn btn-dark">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>

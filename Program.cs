@@ -36,7 +36,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     Console.WriteLine("hii ngjg");
-    app.UseExceptionHandler("/Error");
+    app.UseDeveloperExceptionPage();
+    //app.UseExceptionHandler("/Error");
 }
 else{
     app.UseExceptionHandler("/Error");
