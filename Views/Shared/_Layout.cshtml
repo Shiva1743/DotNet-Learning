@@ -49,10 +49,15 @@
                     <li class="nav-item">
                         <a asp-controller="Home" asp-action="Create" class="nav-link">Create</a>
                     </li>
-                    <li class="nav-item">
-                        <a asp-controller="Administration" asp-action="ListRoles" class="nav-link">Roles</a>
-                    </li>
-                                   
+                    @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a asp-controller="Administration" asp-action="ListRoles" class="nav-link">ManageRoles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Administration" asp-action="ListUsers" class="nav-link">ManageUsers</a>
+                        </li>
+                    }
                 </ul>
                 <ul class="navbar-nav ml-auto">
                     @if (signInManager.IsSignedIn(User))
@@ -81,9 +86,8 @@
         @RenderBody()
 
         @if (IsSectionDefined("Scripts")){
-            @RenderSection("Scripts", required: true)
+            @RenderSection("Scripts", required: false)
         }
     </div>
-    @* <script src="~/js/customescript.js"></script> *@
 </body>
 </html>

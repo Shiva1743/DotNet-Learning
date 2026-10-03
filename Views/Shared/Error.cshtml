@@ -1,11 +1,19 @@
-﻿<h3>
-    Error Occured while processing the requests
-</h3>
-<h2>Please contact us</h2>
-<hr />
-<div class="container">
-    <h1>Exception Details</h1>
-    @* <div class="card card-body">ExceptionMeessage:  @ViewBag.ExceptionMeessage </div> *@
-    @* <div class ="card card-body">ExceptionPath:  @ViewBag.ExceptionPath</div> *@
-    @* <div class="card card-body">Stacktrace :   @ViewBag.Stacktrace</div> *@
-</div>
+﻿@if (ViewBag.ErrorTitle == null)
+{
+    <h3>
+        Error Occured while processing the requests
+    </h3>
+    <h2>Please contact us</h2>
+    <hr />
+    <div class="container">
+        <h1>Exception Details</h1>
+        @* <div class="card card-body">ExceptionMeessage:  @ViewBag.ExceptionMeessage </div> *@
+        @* <div class ="card card-body">ExceptionPath:  @ViewBag.ExceptionPath</div> *@
+        @* <div class="card card-body">Stacktrace :   @ViewBag.Stacktrace</div> *@
+    </div>
+}
+else
+{
+    <h1 class="text-danger">@ViewBag.ErrorTitle</h1>
+    <h6 class="text-danger">@ViewBag.ErrorMessage</h6>   
+}

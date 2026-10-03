@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ApplicationUser>
+
+@{
+    ViewBag.Title = "Users List";
+}
+
+<h1>All Users</h1>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card shadow">
+                @if (Model.Any())
+                {
+                    <div class="card-header text-center ">
+                        <a asp-controller="Administration" style="align-self: end;" asp-action="ListUsers" class="btn btn-primary m-3  w-25">Add</a>
+                    </div>
+                    foreach (var user in Model)
+                    {
+                        <div class="card m-3">
+                            <div class="card-header">
+                                User Id : @user.Id
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">@user.Email</h5>
+                            </div>
+                            <div class="card-footer">
+                                <form method="post" asp-action="DeleteUser" asp-controller="Administration" asp-route-id="@user.Id">
+                                    <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-success">Edit</a>
+                                    @* <button type="submit" onclick="return confirm('are you sure you want to delete @user.UserName user?');" class="btn btn-danger">Delete</button> *@
+                                    <span id="confirmationdel_@user.Id" style="display:none;">
+                                        <span>Are you Sure you want to delete?</span>
+                                        <button type="submit" class="btn btn-danger">Yes</button>
+                                        <a class="btn btn-danger" onclick="confirmDelete('@user.Id',false)">No</a>
+                                    </span>
+                                    <span id="deleteSpan_@user.Id">
+                                        <a class="btn btn-danger" onclick="confirmDelete('@user.Id',true)">Delete</a>
+                                    </span>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/CustomeScript.js"></script>
+}

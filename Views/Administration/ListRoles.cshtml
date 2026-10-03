@@ -6,34 +6,49 @@
 <div class="card">
     <a asp-controller="Administration" style="align-self: end;" asp-action="CreateRole" class="btn btn-primary m-3  w-25">Add Role</a>
     <div class="card-body d-flex justify-content-center">
-                @if (Model != null && Model.Any())
-                {
-                    <table class="table-bordered border-light">
-                        <thead>
-                            <tr>
-                                <th class="p-2">Name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var role in Model)
-                            {
-                   
-                                <tr class="py-2">
-                                    <td class="p-2">@role.Name</td>
-                                    <td>
-                                        <a asp-controller="Administration" asp-action="EditRole" asp-route-id="@role.Id" class="btn btn-primary">Edit</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <div class="py-2">
-                            No Data Found
-                    </div>
-                }
+        @if (Model != null && Model.Any())
+        {
+            <table class="table-bordered border-light">
+                <thead>
+                    <tr>
+                        <th class="p-2">Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var role in Model)
+                    {
+
+                        <tr class="py-2">
+                            <td class="p-2">@role.Name</td>
+                            <td>
+
+                                <form method="post" asp-action="DeleteRole" asp-route-id="@role.Id">
+                                    <a asp-controller="Administration" asp-action="EditRole" asp-route-id="@role.Id" class="btn btn-primary">Edit</a>
+                                    @* <button type="submit" onclick="return confirm('are you sure you want to delete @role.UserName role?');" class="btn btn-danger">Delete</button> *@
+                                    <span id="confirmationdel_@role.Id" style="display:none;">
+                                        <span>Are you Sure you want to delete?</span>
+                                        <button type="submit" class="btn btn-danger">Yes</button>
+                                        <a class="btn btn-danger" onclick="confirmDelete('@role.Id',false)">No</a>
+                                    </span>
+                                    <span id="deleteSpan_@role.Id">
+                                        <a class="btn btn-danger" onclick="confirmDelete('@role.Id',true)">Delete</a>
+                                    </span>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="py-2">
+                No Data Found
+            </div>
+        }
     </div>
 </div>
+@section Scripts{
+    <script src="~/js/CustomeScript.js"></script>
+}

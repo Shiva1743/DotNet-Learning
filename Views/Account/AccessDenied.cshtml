@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<style>
+    .denied-wrap {
+        min-height: 75vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    .denied-card {
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        padding: 40px 30px;
+        border: 0;
+        border-radius: 20px;
+        background: #fff;
+        border-top: 6px solid #dc3545;
+    }
+    .denied-icon {
+        width: 110px;
+        height: 110px;
+        margin: 0 auto 10px;
+        border-radius: 50%;
+        background: #fdecee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pop .5s ease-out;
+    }
+    .denied-code {
+        font-size: 64px;
+        font-weight: 800;
+        line-height: 1;
+        color: #dc3545;
+        letter-spacing: 4px;
+        margin: 10px 0 0;
+    }
+    .denied-card .btn { border-radius: 30px; padding: 8px 22px; }
+    @@keyframes pop {
+        0%   { transform: scale(.4); opacity: 0; }
+        80%  { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+</style>
+
+<div class="denied-wrap">
+    <div class="denied-card shadow-lg">
+
+        <div class="denied-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="#dc3545" viewBox="0 0 16 16">
+                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
+            </svg>
+        </div>
+
+        <h1 class="denied-code">403</h1>
+        <h3 class="mt-2 mb-3">Access Denied</h3>
+
+        <p class="text-muted mb-3">
+            Sorry, aa page jovani tamne permission nathi.<br />
+            Jo tamne lage ke aa bhool chhe, to Admin no sampark karo.
+        </p>
+
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            <p class="mb-4">
+                <span class="badge bg-secondary p-2">Logged in as: @User.Identity.Name</span>
+            </p>
+        }
+
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="javascript:history.back()" class="btn btn-outline-secondary">Go Back</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Home</a>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-dark">Login with another account</a>
+        </div>
+
+    </div>
+</div>

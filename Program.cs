@@ -1,3 +1,5 @@
+// logs storig => F:\1ACSharpProjects\CoreEmptyProject1\bin\Debug\net8.0\dotnetlogs
+
 using CoreEmptyProject1.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
