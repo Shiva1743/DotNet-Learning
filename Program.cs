@@ -15,6 +15,11 @@ builder.Services.AddMvc(config =>
                 .Build();
     config.Filters.Add(new AuthorizeFilter(policy));
 });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role"));
+});
+
 builder.Host.UseNLog();
 
 // ASP.NET Core in DI container , AppDbContext register and connect with SQL Server.
