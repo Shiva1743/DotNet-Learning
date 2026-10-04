@@ -18,6 +18,8 @@ builder.Services.AddMvc(config =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role"));
+    options.AddPolicy("EditRolePolicy", policy => policy.RequireClaim("Edit Role"));
+    options.AddPolicy("AdminRolePolicy", policy => policy.RequireClaim("Admin")); // role using claim
 });
 
 builder.Host.UseNLog();

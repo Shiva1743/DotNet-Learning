@@ -288,6 +288,7 @@ namespace CoreEmptyProject1.Controllers
         [HttpPost]
         [Route("{id?}")]
         [AllowAnonymous]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
             Helper.Dump(new { model });
