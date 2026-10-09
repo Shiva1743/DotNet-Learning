@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace CoreEmptyProject1.Controllers
 {
-    [Authorize(Roles = "Admin")] // role shoulde either Admin or User
+    //[Authorize(Policy = "AdminRolePolicy")] // role shoulde either Admin or User
                                  //[Authorize(Roles= "Admin,User")] // role shoulde either Admin or User
                                  //[Authorize(Roles = "Admin")]
                                  //[Authorize(Roles = "User")] // role shoulde Admin and User both
@@ -61,7 +61,7 @@ namespace CoreEmptyProject1.Controllers
                 Email = user.Email,
                 City = user.City,
                 UserName = user.UserName,
-                Claims = userClaims.Select(x => x.Value).ToList(),
+                Claims = userClaims.Select(x => x.Type +" : "+ x.Value).ToList(),
                 Roles = userRoles
             };
             return View(model);
@@ -187,11 +187,15 @@ namespace CoreEmptyProject1.Controllers
             foreach (Claim claim in ClaimsStore.AllClaims)
             {
                 UserClaims userClaims = new UserClaims { ClaimType = claim.Type };
-                if (existinguserClaims.Any(c => (c.Type == claim.Type)))
+                if (existinguserClaims.Any(c => (c.Type == claim.Type && c.Value == "true" )))
                 {
                     userClaims.IsSelected = true;
                 }
-                model.Claims.Add(userClaims);
+                else
+                {
+                    userClaims.IsSelected = false;
+                }
+                    model.Claims.Add(userClaims);
             }
             return View(model);
         }
@@ -216,7 +220,8 @@ namespace CoreEmptyProject1.Controllers
                 ModelState.AddModelError("", "Cannot remove existing claims");
                 return View(model);
             }
-            result = await userManager.AddClaimsAsync(user, model.Claims.Where(x => x.IsSelected).Select(c => new Claim(c.ClaimType, c.ClaimType)));
+            //.Where(x => x.IsSelected)
+            result = await userManager.AddClaimsAsync(user, model.Claims.Select(c => new Claim(c.ClaimType, c.IsSelected ? "true":"false")));
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot add claims");

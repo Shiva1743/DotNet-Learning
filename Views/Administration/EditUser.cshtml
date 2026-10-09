@@ -75,7 +75,9 @@
                                     {
                                         foreach (var claim in Model.Claims)
                                         {
-                                            <div>@claim</div>
+                                            <div>@(claim)</div>
+                                            @* <div>@(claim + "gds")</div> *@
+                                            @* <div>@($"{claim} fsafsd")</div> *@
                                         }
                                     }
                                     else

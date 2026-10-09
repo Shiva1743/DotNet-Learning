@@ -15,11 +15,24 @@ builder.Services.AddMvc(config =>
                 .Build();
     config.Filters.Add(new AuthorizeFilter(policy));
 });
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = new PathString("/Administration/AccessDenied");
+});
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role"));
-    options.AddPolicy("EditRolePolicy", policy => policy.RequireClaim("Edit Role"));
-    options.AddPolicy("AdminRolePolicy", policy => policy.RequireClaim("Admin")); // role using claim
+    options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role", "true"));
+    //options.AddPolicy("EditRolePolicy", policy => policy.RequireClaim("Edit Role","true"));
+    options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context =>
+        context.User.IsInRole("Admin") &&
+        context.User.HasClaim(claim => (claim.Type == "Edit Role") && (claim.Value == "true")
+        || context.User.IsInRole("Super Admin")
+    )));
+
+
+
+
+    options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin")); // role using claim
 });
 
 builder.Host.UseNLog();
@@ -48,7 +61,8 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
     //app.UseExceptionHandler("/Error");
 }
-else{
+else
+{
     app.UseExceptionHandler("/Error");
 }
 app.UseStatusCodePagesWithReExecute("/Error/{0}"); // 404 actual error ave chhe.
