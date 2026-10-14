@@ -16,9 +16,9 @@ namespace CoreEmptyProject1.Views.Shared
         // Console / Output ma print karva (execution chalu rehse)
         public static void Dump(object data)
         {
-            var json = JsonSerializer.Serialize(data, options);
-            Console.WriteLine(json);
-            System.Diagnostics.Debug.WriteLine(json);
+            string output = data is string s ? s : JsonSerializer.Serialize(data, options);
+            Console.WriteLine(output);
+            System.Diagnostics.Debug.WriteLine(output);
         }
     }
 }

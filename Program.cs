@@ -1,6 +1,7 @@
 // logs storig => F:\1ACSharpProjects\CoreEmptyProject1\bin\Debug\net8.0\dotnetlogs
 
 using CoreEmptyProject1.Models;
+using CoreEmptyProject1.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -15,6 +16,7 @@ builder.Services.AddMvc(config =>
                 .Build();
     config.Filters.Add(new AuthorizeFilter(policy));
 });
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.AccessDeniedPath = new PathString("/Administration/AccessDenied");
@@ -23,14 +25,13 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role", "true"));
     //options.AddPolicy("EditRolePolicy", policy => policy.RequireClaim("Edit Role","true"));
-    options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context =>
-        context.User.IsInRole("Admin") &&
-        context.User.HasClaim(claim => (claim.Type == "Edit Role") && (claim.Value == "true")
-        || context.User.IsInRole("Super Admin")
-    )));
-
-
-
+    //options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context =>
+    //    context.User.IsInRole("Admin") &&
+    //    context.User.HasClaim(claim => (claim.Type == "Edit Role") && (claim.Value == "true")
+    //    || context.User.IsInRole("Super Admin")
+    //)));
+    options.AddPolicy("EditRolePolicy", policy => policy.AddRequirements(new ManageAdminRolesAndClaimsRequirement()));
+    //options.InvokeHandlersAfterFailure = false;
 
     options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin")); // role using claim
 });
@@ -44,12 +45,30 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredLength = 10;
     options.Password.RequiredUniqueChars = 3;
     options.Password.RequireNonAlphanumeric = false;
+
+    options.SignIn.RequireConfirmedEmail = true;
+    options.Tokens.EmailConfirmationTokenProvider = "CustomEmailCnfirm";
 })
-.AddEntityFrameworkStores<AppDbContext>();
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders()
+.AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailCnfirm");
+
+//DataProtectionTokenProviderOptions is for all type of token like email,reset password etc.
+// so use custom token provider
+builder.Services.Configure<DataProtectionTokenProviderOptions>(o => o.TokenLifespan = TimeSpan.FromHours(5));
 
 
+
+builder.Services.AddAuthentication().AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+});
+
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IEmployeeRepository, SQLEmployeeRepository>(); // count will be same withing scoped means incresed till 5
-
+builder.Services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimHandler>(); // REGISTER Custom Handler from Security Folder 
+builder.Services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>(); // REGISTER Custom Handler from Security Folder 
 var app = builder.Build();
 
 

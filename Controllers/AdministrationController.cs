@@ -103,6 +103,7 @@ namespace CoreEmptyProject1.Controllers
 
         [HttpGet]
         [Route("{id?}")]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> ManageUserRoles(string id)
         {
             ViewBag.UserId = id;
@@ -255,7 +256,7 @@ namespace CoreEmptyProject1.Controllers
         }
 
         [HttpGet]
-        //[AllowAnonymous]
+        [AllowAnonymous]
         public ViewResult ListRoles()
         {
             var roles = roleManager.Roles.ToList();
@@ -293,7 +294,7 @@ namespace CoreEmptyProject1.Controllers
         [HttpPost]
         [Route("{id?}")]
         [AllowAnonymous]
-        [Authorize(Policy = "EditRolePolicy")]
+        //[Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
             Helper.Dump(new { model });

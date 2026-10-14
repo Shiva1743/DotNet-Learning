@@ -26,12 +26,12 @@
                             <td>
 
                                 <form method="post" asp-action="DeleteRole" asp-route-id="@role.Id">
-                                    @if ((await authorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
-                                    {
+                                    @* @if ((await authorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
+                                    { *@
                                         <a asp-controller="Administration" asp-action="EditRole" asp-route-id="@role.Id" class="btn btn-primary">
                                             Edit
                                         </a>
-                                    }
+                                    @* } *@
 
                                     @* <button type="submit" onclick="return confirm('are you sure you want to delete @role.UserName role?');" class="btn btn-danger">Delete</button> *@
                                     <span id="confirmationdel_@role.Id" style="display:none;">
