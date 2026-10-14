@@ -48,6 +48,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
     options.SignIn.RequireConfirmedEmail = true;
     options.Tokens.EmailConfirmationTokenProvider = "CustomEmailCnfirm";
+
+
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders()

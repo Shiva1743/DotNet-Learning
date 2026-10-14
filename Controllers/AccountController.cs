@@ -14,7 +14,7 @@ namespace CoreEmptyProject1.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -44,7 +44,7 @@ namespace CoreEmptyProject1.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallback(string? ReturnUrl,string remoteError = null)
+        public async Task<IActionResult> ExternalLoginCallback(string? ReturnUrl, string remoteError = null)
         {
             ReturnUrl = ReturnUrl ?? Url.Content("~/");
 
@@ -76,26 +76,27 @@ namespace CoreEmptyProject1.Controllers
                 }
             }
 
-            var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider,info.ProviderKey,isPersistent:false,bypassTwoFactor:true);
+            var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (signInResult.Succeeded)
             {
                 return LocalRedirect(ReturnUrl);
             }
             else
             {
-                if(email != null)
+                if (email != null)
                 {
                     if (getuser == null)
                     {
-                        getuser = new ApplicationUser { 
+                        getuser = new ApplicationUser
+                        {
                             UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
                             Email = info.Principal.FindFirstValue(ClaimTypes.Email),
                         };
 
                         await userManager.CreateAsync(getuser);
                     }
-                    await userManager.AddLoginAsync(getuser,info);
-                    await signInManager.SignInAsync(getuser,isPersistent:false);
+                    await userManager.AddLoginAsync(getuser, info);
+                    await signInManager.SignInAsync(getuser, isPersistent: false);
                     return LocalRedirect(ReturnUrl);
                 }
 
@@ -103,7 +104,7 @@ namespace CoreEmptyProject1.Controllers
                 ViewBag.ErrorMessage = "Please contact support  ";
                 return View("Error");
             }
-                return View("Login", loginViewModel);
+            return View("Login", loginViewModel);
         }
 
 
@@ -116,13 +117,13 @@ namespace CoreEmptyProject1.Controllers
             {
                 var getuser = await userManager.FindByEmailAsync(model.Email);
 
-                if (getuser != null && !getuser.EmailConfirmed && (await userManager.CheckPasswordAsync(getuser,model.Password)))
+                if (getuser != null && !getuser.EmailConfirmed && (await userManager.CheckPasswordAsync(getuser, model.Password)))
                 {
                     ModelState.AddModelError(string.Empty, "Email not confirmed.");
                     return View(model);
                 }
 
-                var result = await signInManager.PasswordSignInAsync(model.Email,model.Password,model.RememberMe,false);
+                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
@@ -135,7 +136,7 @@ namespace CoreEmptyProject1.Controllers
                         return RedirectToAction("index", "home");
                     }
                 }
-                ModelState.AddModelError(string.Empty,"Invalid Login Attempt");
+                ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
             }
             return View(model);
         }
@@ -148,11 +149,11 @@ namespace CoreEmptyProject1.Controllers
         }
 
 
-        [AcceptVerbs("Get","Post")]
+        [AcceptVerbs("Get", "Post")]
         [AllowAnonymous]
         public async Task<IActionResult> IsEmailInUse(string email)
         {
-            var user  = await userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 return Json(true);
@@ -175,17 +176,17 @@ namespace CoreEmptyProject1.Controllers
                     Email = model.Email,
                     City = model.City,
                 };
-                var result = await userManager.CreateAsync(user,model.Password);
+                var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var confirmationLink = Url.Action("ConfirmEmail","Account",new { userId=user.Id ,token = token }, Request.Scheme);
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
 
                     Helper.Dump($"confirmationLink is: {confirmationLink} ");
 
-                    if(signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
-                        return RedirectToAction("ListUsers","Administration");
+                        return RedirectToAction("ListUsers", "Administration");
                     }
 
                     ViewBag.ErrorTitle = "Registration Successful";
@@ -204,14 +205,14 @@ namespace CoreEmptyProject1.Controllers
             return View(model);
         }
 
-            
+
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId,string token)
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             if (userId == null || token == null)
             {
-                return RedirectToAction("index","home");
+                return RedirectToAction("index", "home");
             }
             var user = await userManager.FindByIdAsync(userId);
             if (user == null)
@@ -220,7 +221,7 @@ namespace CoreEmptyProject1.Controllers
                 return View("NotFound");
             }
 
-            var result = await userManager.ConfirmEmailAsync(user,token);
+            var result = await userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
                 return View();
@@ -252,7 +253,7 @@ namespace CoreEmptyProject1.Controllers
                     Helper.Dump($"PasswordResetLink is: {PasswordResetLink}");
                     return View("ForgotPasswordConfirmation");
                 }
-                ModelState.AddModelError("",$"User not found {model.Email}");
+                ModelState.AddModelError("", $"User not found {model.Email}");
                 return View("ForgotPasswordConfirmation");
             }
             return View(model);
@@ -278,18 +279,89 @@ namespace CoreEmptyProject1.Controllers
                 var user = await userManager.FindByEmailAsync(model.Email);
                 if (user != null)
                 {
-                    var result = await userManager.ResetPasswordAsync(user,model.Token,model.Password);
+                    var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
                     if (result.Succeeded)
                     {
                         return View("ResetPasswordConfirmation");
                     }
                     foreach (var error in result.Errors)
                     {
-                        ModelState.AddModelError("",error.Description);
+                        ModelState.AddModelError("", error.Description);
                     }
                     return View(model);
                 }
                 return View("ResetPasswordConfirmation");
+            }
+            return View(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> ChangePassword()
+        {
+            var user = await userManager.GetUserAsync(User);
+            var userHasPassword = await userManager.HasPasswordAsync(user);
+            if (!userHasPassword)
+            {
+                return RedirectToAction("AddPassword");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction("Login");
+                }
+                var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return View();
+                }
+                await signInManager.RefreshSignInAsync(user);
+                return View("ChangePasswordConfirmation");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddPassword()
+        {
+            var user = await userManager.GetUserAsync(User);
+            var userHasPassword = await userManager.HasPasswordAsync(user);
+            if (userHasPassword)
+            {
+                return RedirectToAction("ChangePassword");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPassword(AddPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.GetUserAsync(User);
+                // returns true if local password is alredy set
+                var userHasPassword = await userManager.HasPasswordAsync(user);
+                var result = await userManager.AddPasswordAsync(user, model.NewPassword);
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return View();
+                }
+                await signInManager.RefreshSignInAsync(user);
+                return View("AddPasswordConfirmation");
             }
             return View(model);
         }
