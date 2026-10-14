@@ -123,7 +123,7 @@ namespace CoreEmptyProject1.Controllers
                     return View(model);
                 }
 
-                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe,true);
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
@@ -135,6 +135,11 @@ namespace CoreEmptyProject1.Controllers
                     {
                         return RedirectToAction("index", "home");
                     }
+                }
+
+                if (result.IsLockedOut)
+                {
+                    return View("AccountLocked");
                 }
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
             }
@@ -282,6 +287,10 @@ namespace CoreEmptyProject1.Controllers
                     var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
                     if (result.Succeeded)
                     {
+                        if (await userManager.IsLockedOutAsync(user))
+                        {
+                            await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+                        }
                         return View("ResetPasswordConfirmation");
                     }
                     foreach (var error in result.Errors)
@@ -294,6 +303,7 @@ namespace CoreEmptyProject1.Controllers
             }
             return View(model);
         }
+
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {

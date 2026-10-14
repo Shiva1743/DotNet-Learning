@@ -49,7 +49,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.SignIn.RequireConfirmedEmail = true;
     options.Tokens.EmailConfirmationTokenProvider = "CustomEmailCnfirm";
 
-
+    options.Lockout.MaxFailedAccessAttempts = 2;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders()
