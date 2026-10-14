@@ -1,6 +1,8 @@
 ﻿using CoreEmptyProject1.Models;
+using CoreEmptyProject1.Security;
 using CoreEmptyProject1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
 
@@ -13,27 +15,36 @@ namespace CoreEmptyProject1.Controllers
         private IEmployeeRepository _employeeRepository;
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private IDataProtector protector;
 
         // constructor injection
         public HomeController(IEmployeeRepository employeeRepository,
-            IWebHostEnvironment hostingEnvironment, ILogger<HomeController> logger)
+            IWebHostEnvironment hostingEnvironment, ILogger<HomeController> logger
+            , DataProtectionPurposeString dataProtectionPurposeString
+            , IDataProtectionProvider dataProtectionProvider)
         {
             _employeeRepository = employeeRepository;
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
+            protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeString.EmployeeIdRouteValue);
         }
 
         [Route("~/")]
         [AllowAnonymous]
         public ViewResult Index() // function name is not Index here so view should have the related cshtml file.
         {
-            var model = _employeeRepository.GetAllEmployee();
+            var model = _employeeRepository.GetAllEmployee()
+                        .Select( e =>
+                        {
+                            e.EncryptedId = protector.Protect(e.Id.ToString());
+                            return e;
+                        });
             return View("~/Views/Home/Index.cshtml", model);
         }
 
         [Route("{id?}")]
         [AllowAnonymous]
-        public ViewResult Details(int? id)
+        public ViewResult Details(string id)
         {
             //throw new Exception("hello show exceptioon error message here!!");
             _logger.LogTrace("Trace Log");
@@ -48,10 +59,10 @@ namespace CoreEmptyProject1.Controllers
             //    Response.StatusCode = 404;
             //    return View("NotFound",id);
             //}
-
+            int employeeID = Convert.ToInt32(protector.Unprotect(id));
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                Empp = _employeeRepository.GetEmployee(id??3),
+                Empp = _employeeRepository.GetEmployee(employeeID),
                 PageTitle = "Employee Details",
             };
             return View(homeDetailsViewModel);

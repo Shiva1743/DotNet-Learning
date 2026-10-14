@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoreEmptyProject1.Models
 {
     public class Employee
     {
         public int Id { get; set; }
-
+        [NotMapped]
+        public string EncryptedId { get; set; }
         [Required]
         [MaxLength(10, ErrorMessage="Length not exceed 10 character")]
         public string Name { get; set; }

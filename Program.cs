@@ -69,6 +69,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IEmployeeRepository, SQLEmployeeRepository>(); // count will be same withing scoped means incresed till 5
 builder.Services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimHandler>(); // REGISTER Custom Handler from Security Folder 
 builder.Services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>(); // REGISTER Custom Handler from Security Folder 
+
+builder.Services.AddSingleton<DataProtectionPurposeString>();
 var app = builder.Build();
 
 
